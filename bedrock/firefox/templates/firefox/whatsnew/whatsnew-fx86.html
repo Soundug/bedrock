@@ -1,0 +1,97 @@
+{# This Source Code Form is subject to the terms of the Mozilla Public
+ # License, v. 2.0. If a copy of the MPL was not distributed with this
+ # file, You can obtain one at http://mozilla.org/MPL/2.0/. -#}
+
+{% from "macros.html" import google_play_button, send_to_device with context %}
+
+{% extends "firefox/whatsnew/base.html" %}
+
+{% block page_title %}What’s new with Firefox{% endblock %}
+
+{#- This will appear as <meta property="og:description"> which can be used for social share -#}
+{% block page_og_desc %}What’s new with Firefox{% endblock %}
+
+{% block body_id %}firefox-whatsnew{% endblock %}
+{% block body_class %}{% endblock %}
+
+{% block page_css %}
+  {{ css_bundle('firefox_whatsnew_86') }}
+{% endblock %}
+
+{% set android_url = firefox_adjust_url('android', campaign) %}
+{% set ios_url = firefox_adjust_url('ios', campaign) %}
+{% set show_send_to_device = LANG in settings.SEND_TO_DEVICE_LOCALES %}
+
+{% block site_header %}{% endblock %}
+
+{% block content %}
+<main class="content-wrapper mzp-t-firefox" contenteditable>
+  {% include 'firefox/whatsnew/includes/header.html' %}
+
+  <section class="wnp-content-main">
+    <div class="mzp-l-content mzp-t-content-md">
+      <img class="wnp-main-image" src="{{ static('img/firefox/mobile/protocol/account.svg') }}" width="200" alt="">
+      <h1 class="wnp-main-title">A new Firefox for every device</h1>
+      <p class="wnp-main-tagline">Whatever operating system you’ve got, there’s a better-than-ever, non-profit-backed mobile browser to put on it.</p>
+
+      <div class="wnp-main-cta">
+      {% if show_send_to_device %}
+        <div id="send-to-device-wrapper" class="primary-cta">
+        {{ send_to_device(include_title=False, message_set='fx-whatsnew', input_label='Enter your email for a download link', class='vertical') }}
+        </div>
+      {% else %}
+        <div class="qr-code-wrapper">
+          <img src="{{ static('img/firefox/mobile/protocol/qr-firefox.png') }}"
+              width="220"
+              height="220"
+              id="firefox-qr"
+              data-mozillaonline-link="{{ static('img/firefox/mobile/protocol/qr-firefox-mozillaonline.png') }}"
+              alt="{{ ftl('whatsnew81-scan-this-qr-code') }}">
+        </div>
+      {% endif %}
+      </div>
+    </div>
+  </section>
+
+  <section class="wnp-content-extra">
+    <div class="mzp-l-content mzp-t-content-xl">
+      <div class="l-columns-two">
+
+        <div class="c-picto-block">
+          <div class="c-picto-block-image">
+            <img src="{{ static('img/firefox/features/index/feature_icons/extensions_orange.svg') }}" width="65" alt="">
+          </div>
+          <h3 class="c-picto-block-title">The NEW Firefox for Android is here</h3>
+          <div class="c-picto-block-body">
+            <p>Our latest for Android has lots of fun, smart and even weirdo features – like a moveable search bar. Because we’re an independent browser. We care about your thumbs.</p>
+            {{ google_play_button(href=android_url, id='playStoreLink') }}
+          </div>
+        </div>
+
+        <div class="c-picto-block">
+          <div class="c-picto-block-image">
+            <img src="{{ static('img/firefox/features/index/feature_icons/sync_pink.svg') }}" width="65" alt="">
+          </div>
+          <h3 class="c-picto-block-title">No more phoning it in with Safari</h3>
+          <div class="c-picto-block-body">
+            <p>Attention iPhone people: in iOS 14, you can finally set Firefox as your forever go-to, get-it-done, default browser. Make sure you’ve got the latest Firefox for iOS.</p>
+            <a id="appStoreLink" href="{{ ios_url }}" data-link-type="download" data-download-os="iOS">
+              <img src="{{ l10n_img('firefox/ios/btn-app-store.svg') }}" alt="{{ ftl('download-button-download-app-store') }}" width="152" height="45">
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <aside class="mzp-l-content c-utilities">
+    {% set releasenotes_url = url('firefox.releases.index') if not version else '/firefox/%s/releasenotes/'|format(version) %}
+    <p>{{ ftl('whatsnew-release-notes', url=releasenotes_url) }}</p>
+  </aside>
+
+</main>
+{% endblock %}
+
+{% block js %}
+  {{ js_bundle('firefox_whatsnew_86') }}
+{% endblock %}
